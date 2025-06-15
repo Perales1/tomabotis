@@ -1,120 +1,358 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Cambio de Monedas</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      background-color: #121212;
-      color: #e0e0e0;
-      font-family: sans-serif;
-      padding: 20px;
-    }
-    .container {
-      max-width: 480px;
-      margin: auto;
-    }
-    label {
-      display: block;
-      margin-top: 15px;
-    }
-    input[type="number"] {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      background: #1e1e1e;
-      border: 1px solid #333;
-      color: #e0e0e0;
-      border-radius: 4px;
-    }
-    button {
-      margin-top: 20px;
-      width: 100%;
-      padding: 12px;
-      background: #2c7ac9;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      font-size: 16px;
-    }
-    button:hover {
-      background: #1e5fa4;
-    }
-    .result {
-      margin-top: 20px;
-      padding: 15px;
-      background: #1e1e1e;
-      border: 1px solid #333;
-      border-radius: 4px;
-    }
-  </style>
+    <meta charset="UTF-8"/>
+    <title>Cambio de Monedas y Billetes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"/>
+    <style>
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: 'Montserrat', sans-serif;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 20px auto;
+            background: #1e1e1e;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+            padding: 25px 30px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+            margin-left: 10px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 30px 12px 10px;
+            background: #121212;
+            border: 1px solid #333;
+            color: #e0e0e0;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="number"]:focus {
+            border-color: #2c7ac9;
+            outline: none;
+        }
+
+        .infinity-symbol {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #5f87c3;
+            font-weight: 700;
+            font-size: 1.2rem;
+            pointer-events: none;
+            user-select: none;
+            opacity: 0.7;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .buttons-top {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            flex: 1 1 28%;
+            padding: 14px;
+            background: #2c7ac9;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.3s ease;
+            min-width: 110px;
+        }
+
+        button:hover {
+            background: #1e5fa4;
+        }
+
+        #compute {
+            margin-top: 20px;
+            width: 100%;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            background: #121212;
+            border: 1px solid #333;
+            border-radius: 8px;
+            min-height: 60px;
+            font-size: 1.1rem;
+            line-height: 1.4;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+
+            .container {
+                padding: 20px 15px;
+            }
+
+            button {
+                flex-basis: 100%;
+            }
+
+            label {
+                font-size: 1rem;
+            }
+
+            input[type="number"] {
+                font-size: 1.1rem;
+                padding: 14px 30px 14px 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Cambio de Monedas</h1>
+<div class="container">
+    <h1>Cambio de Monedas y Billetes</h1>
 
-    <label>Monedas que tienes:</label>
-    <label>2 €: <input type="number" id="stock0" value="0" min="0"></label>
-    <label>1 €: <input type="number" id="stock1" value="0" min="0"></label>
-    <label>0.50 €: <input type="number" id="stock2" value="0" min="0"></label>
-    <label>0.20 €: <input type="number" id="stock3" value="0" min="0"></label>
-    <label>0.10 €: <input type="number" id="stock4" value="0" min="0"></label>
-    <label>0.05 €: <input type="number" id="stock5" value="0" min="0"></label>
-    <label>0.02 €: <input type="number" id="stock6" value="0" min="0"></label>
-    <label>0.01 €: <input type="number" id="stock7" value="0" min="0"></label>
+    <div class="buttons-top">
+        <button id="reset-fields" title="Poner todos los campos a 0 (pero se borran al editar)">Reset campos</button>
+        <button id="infinity-fields" title="Poner todos los campos a infinito">Campos a ∞</button>
+        <button id="toggle-mode" title="Alternar soporte de billetes">Soporte billetes</button>
+    </div>
 
-    <label>Cantidad a entregar (€):</label>
-    <input type="number" step="0.01" id="amount" placeholder="Ej. 4.70">
+    <label style="margin-bottom: 8px;">
+        Hola botis, espero que te sirva UwUs, que te ayude en el trabajín<br/>
+        Introduce la cantidad de monedas/billetes que tienes.<br/>
+        Campo vacío = infinito (∞)
+    </label>
+
+    <div id="inputs-stock"></div>
+
+    <label for="amount" style="margin-top: 25px;">Cantidad a entregar (€):</label>
+    <input
+            type="number"
+            step="0.01"
+            id="amount"
+            placeholder="Ej. 4.70"
+            enterkeyhint="done"
+            autocomplete="off"
+            autocorrect="off"
+            spellcheck="false"
+    />
 
     <button id="compute">Calcular</button>
 
     <div class="result" id="result"></div>
-  </div>
+</div>
 
-  <script>
-    const valores = [200,100,50,20,10,5,2,1];
-    document.getElementById('compute').onclick = () => {
-      const stock = valores.map((v, i) => parseInt(document.getElementById('stock'+i).value) || 0);
-      const amt = Math.round((parseFloat(document.getElementById('amount').value) || 0) * 100);
-      const resDiv = document.getElementById('result');
-      const resultado = new Array(8).fill(0);
+<script>
+    const monedas = [200, 100, 50, 20, 10, 5, 2, 1];
+    const monedasNombres = ['2 €', '1 €', '0.50 €', '0.20 €', '0.10 €', '0.05 €', '0.02 €', '0.01 €'];
 
-      // Programación dinámica
-      const dp = Array(amt+1).fill(Infinity);
-      const used = Array(amt+1).fill().map(() => Array(8).fill(0));
-      dp[0] = 0;
+    const billetes = [50000, 20000, 10000, 5000, 2000, 1000, 500, 200];
+    const billetesNombres = ['500 €', '200 €', '100 €', '50 €', '20 €', '10 €', '5 €', '2 €'];
 
-      for (let i = 0; i <= amt; i++) {
-        if (!isFinite(dp[i])) continue;
-        for (let j = 0; j < 8; j++) {
-          const v = valores[j];
-          if (i + v <= amt && used[i][j] < stock[j]) {
-            if (dp[i+v] > dp[i] + 1) {
-              dp[i+v] = dp[i] + 1;
-              used[i+v] = used[i].slice();
-              used[i+v][j]++;
+    let modoBilletes = false;
+    const INFINITO = 9999999;
+
+    const contInputs = document.getElementById('inputs-stock');
+    const resultDiv = document.getElementById('result');
+    const btnCompute = document.getElementById('compute');
+    const btnToggle = document.getElementById('toggle-mode');
+    const btnReset = document.getElementById('reset-fields');
+    const btnInfinity = document.getElementById('infinity-fields');
+    const inputAmount = document.getElementById('amount');
+
+    function generarInputs() {
+        contInputs.innerHTML = '';
+        let valores = modoBilletes ? billetes.concat(monedas) : monedas;
+        let nombres = modoBilletes ? billetesNombres.concat(monedasNombres) : monedasNombres;
+
+        nombres.forEach((nombre, i) => {
+            const label = document.createElement('label');
+            label.textContent = nombre + ':';
+
+            const inputWrapper = document.createElement('div');
+            inputWrapper.className = 'input-wrapper';
+
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.min = '0';
+            input.id = 'stock' + i;
+            input.value = '0'; // por defecto 0 (no vacío)
+            input.autocomplete = 'off';
+            input.autocorrect = 'off';
+            input.spellcheck = false;
+
+            // Símbolo infinito a la derecha si campo vacío
+            const infinitySymbol = document.createElement('span');
+            infinitySymbol.className = 'infinity-symbol';
+            infinitySymbol.textContent = '∞';
+            infinitySymbol.style.display = 'none'; // inicialmente no visible porque valor es 0
+
+            inputWrapper.appendChild(input);
+            inputWrapper.appendChild(infinitySymbol);
+
+            label.appendChild(inputWrapper);
+            contInputs.appendChild(label);
+
+            // Actualiza símbolo infinito con cada cambio
+            function actualizarInfinito() {
+                if (input.value.trim() === '') {
+                    infinitySymbol.style.display = 'inline-block';
+                } else {
+                    infinitySymbol.style.display = 'none';
+                }
             }
-          }
-        }
-      }
 
-      if (!isFinite(dp[amt])) {
-        resDiv.innerHTML = '❗ No es posible entregar esa cantidad con las monedas disponibles.';
-        return;
-      }
+            actualizarInfinito();
 
-      const ans = used[amt];
-      let html = '<h2>Resultado:</h2><ul>';
-      valores.forEach((v,i) => {
-        if (ans[i] > 0) {
-          const euro = v >= 100 ? `${v/100} €` : `${v} c`;
-          html += `<li>${ans[i]} × ${euro}</li>`;
-        }
-      });
-      html += '</ul>';
-      resDiv.innerHTML = html;
+            input.addEventListener('input', actualizarInfinito);
+
+            // Al hacer foco si está a 0, limpiar el campo
+            input.addEventListener('focus', () => {
+                if (input.value === '0') {
+                    input.value = '';
+                    actualizarInfinito();
+                }
+            });
+
+            // Si se pierde foco y está vacío, poner 0
+            input.addEventListener('blur', () => {
+                if (input.value.trim() === '') {
+                    input.value = '0';
+                    actualizarInfinito();
+                }
+            });
+
+            // Saltar al siguiente input al pulsar Enter
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const inputs = contInputs.querySelectorAll('input[type=number]');
+                    const idx = Array.from(inputs).indexOf(input);
+                    if (idx + 1 < inputs.length) {
+                        inputs[idx + 1].focus();
+                    } else {
+                        inputAmount.focus();
+                    }
+                }
+            });
+        });
+    }
+
+    generarInputs();
+
+    btnToggle.onclick = () => {
+        modoBilletes = !modoBilletes;
+        btnToggle.textContent = modoBilletes ? 'Soporte solo monedas' : 'Soporte billetes';
+        generarInputs();
+        resultDiv.innerHTML = '';
     };
-  </script>
+
+    btnReset.onclick = () => {
+        const inputs = contInputs.querySelectorAll('input[type=number]');
+        inputs.forEach(input => {
+            input.value = '0'; // poner 0 visible
+            const evt = new Event('input');
+            input.dispatchEvent(evt); // para actualizar símbolo infinito
+        });
+        inputAmount.value = '';
+        resultDiv.innerHTML = '';
+        inputs.length && inputs[0].focus();
+    };
+
+    btnInfinity.onclick = () => {
+        const inputs = contInputs.querySelectorAll('input[type=number]');
+        inputs.forEach(input => {
+            input.value = ''; // vacío = infinito
+            const evt = new Event('input');
+            input.dispatchEvent(evt);
+        });
+        inputAmount.value = '';
+        resultDiv.innerHTML = '';
+        inputs.length && inputs[0].focus();
+    };
+
+    btnCompute.onclick = () => {
+        // Obtener stocks
+        const inputs = contInputs.querySelectorAll('input[type=number]');
+        let stocks = [];
+        for (let input of inputs) {
+            if (input.value.trim() === '') {
+                stocks.push(INFINITO);
+            } else {
+                const v = parseInt(input.value, 10);
+                stocks.push(isNaN(v) ? 0 : v);
+            }
+        }
+
+        let cantidadEuros = parseFloat(inputAmount.value.replace(',', '.'));
+        if (isNaN(cantidadEuros) || cantidadEuros <= 0) {
+            resultDiv.innerHTML = '<span style="color:#f55;">Introduce una cantidad válida mayor que 0</span>';
+            inputAmount.focus();
+            return;
+        }
+        // Pasar a céntimos para cálculo entero
+        let restante = Math.round(cantidadEuros * 100);
+
+        const valores = modoBilletes ? billetes.concat(monedas) : monedas;
+
+        let resultado = [];
+
+        for (let i = 0; i < valores.length; i++) {
+            const val = valores[i];
+            let maxPiezas = stocks[i];
+            let num = Math.min(Math.floor(restante / val), maxPiezas);
+            if (num > 0) {
+                resultado.push(`${num} × ${modoBilletes && i < billetes.length ? billetesNombres[i] : monedasNombres[modoBilletes ? i - billetes.length : i]}`);
+                restante -= num * val;
+            }
+        }
+
+        if (restante > 0) {
+            resultDiv.innerHTML = `<span style="color:#f55;">No hay suficiente cambio para esa cantidad.</span>`;
+        } else {
+            resultDiv.innerHTML = resultado.length ? resultado.join('<br>') : 'No se necesitan monedas/billetes.';
+        }
+    };
+</script>
 </body>
 </html>

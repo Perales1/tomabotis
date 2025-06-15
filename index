@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cambio de Monedas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background-color: #121212;
+      color: #e0e0e0;
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    .container {
+      max-width: 480px;
+      margin: auto;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      background: #1e1e1e;
+      border: 1px solid #333;
+      color: #e0e0e0;
+      border-radius: 4px;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background: #2c7ac9;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #1e5fa4;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      background: #1e1e1e;
+      border: 1px solid #333;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Cambio de Monedas</h1>
+
+    <label>Monedas que tienes:</label>
+    <label>2 €: <input type="number" id="stock0" value="0" min="0"></label>
+    <label>1 €: <input type="number" id="stock1" value="0" min="0"></label>
+    <label>0.50 €: <input type="number" id="stock2" value="0" min="0"></label>
+    <label>0.20 €: <input type="number" id="stock3" value="0" min="0"></label>
+    <label>0.10 €: <input type="number" id="stock4" value="0" min="0"></label>
+    <label>0.05 €: <input type="number" id="stock5" value="0" min="0"></label>
+    <label>0.02 €: <input type="number" id="stock6" value="0" min="0"></label>
+    <label>0.01 €: <input type="number" id="stock7" value="0" min="0"></label>
+
+    <label>Cantidad a entregar (€):</label>
+    <input type="number" step="0.01" id="amount" placeholder="Ej. 4.70">
+
+    <button id="compute">Calcular</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    const valores = [200,100,50,20,10,5,2,1];
+    document.getElementById('compute').onclick = () => {
+      const stock = valores.map((v, i) => parseInt(document.getElementById('stock'+i).value) || 0);
+      const amt = Math.round((parseFloat(document.getElementById('amount').value) || 0) * 100);
+      const resDiv = document.getElementById('result');
+      const resultado = new Array(8).fill(0);
+
+      // Programación dinámica
+      const dp = Array(amt+1).fill(Infinity);
+      const used = Array(amt+1).fill().map(() => Array(8).fill(0));
+      dp[0] = 0;
+
+      for (let i = 0; i <= amt; i++) {
+        if (!isFinite(dp[i])) continue;
+        for (let j = 0; j < 8; j++) {
+          const v = valores[j];
+          if (i + v <= amt && used[i][j] < stock[j]) {
+            if (dp[i+v] > dp[i] + 1) {
+              dp[i+v] = dp[i] + 1;
+              used[i+v] = used[i].slice();
+              used[i+v][j]++;
+            }
+          }
+        }
+      }
+
+      if (!isFinite(dp[amt])) {
+        resDiv.innerHTML = '❗ No es posible entregar esa cantidad con las monedas disponibles.';
+        return;
+      }
+
+      const ans = used[amt];
+      let html = '<h2>Resultado:</h2><ul>';
+      valores.forEach((v,i) => {
+        if (ans[i] > 0) {
+          const euro = v >= 100 ? `${v/100} €` : `${v} c`;
+          html += `<li>${ans[i]} × ${euro}</li>`;
+        }
+      });
+      html += '</ul>';
+      resDiv.innerHTML = html;
+    };
+  </script>
+</body>
+</html>
